@@ -25,7 +25,32 @@ const promise = new Promise((resolve, reject) => {
   }, 2000);
 });
 
-promise
-  .then((response) => console.log(promise))
-  .catch((error) => console.log(error))
-  .finally(() => console.log("Finally!"));
+// promise
+//   .then((response) => console.log(promise))
+//   .catch((error) => console.log(error))
+//   .finally(() => console.log("Finally!"));
+
+const fetchData = () => {
+  console.log("Pending...");
+  fetch("https://jsonplaceholder.typicode.com/users")
+    .then((response) => response.json())
+    .then((jsonResponse) => console.log(jsonResponse))
+    .catch((err) => console.log("ERROR fetching users data: ", err))
+    .finally(() => console.log("Promised ended..."));
+};
+
+// fetchData();
+
+const fetchDataUsingAsync = async () => {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/users");
+    const jsonData = await response.json();
+    console.log(jsonData);
+  } catch (error) {
+    console.log("ERROR Fetching users data: ", error);
+  } finally {
+    console.log("Promise has ended!");
+  }
+};
+
+fetchDataUsingAsync();
