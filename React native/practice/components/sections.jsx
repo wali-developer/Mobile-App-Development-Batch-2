@@ -5,7 +5,8 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeContext } from "../context/themeContext";
 
 const DATA = [
   {
@@ -36,8 +37,14 @@ const DATA = [
 
 const Sections = () => {
   const { width } = useWindowDimensions();
+  const { theme } = useContext(ThemeContext);
   return (
-    <View style={{ padding: 15 }}>
+    <View
+      style={{
+        padding: 15,
+        backgroundColor: theme === "light" ? "white" : "black",
+      }}
+    >
       {/* <Text>Sections</Text> */}
       <SectionList
         sections={DATA}
@@ -60,6 +67,7 @@ const Sections = () => {
               fontWeight: "bold",
               marginTop: 20,
               marginBottom: 10,
+              color: theme === "light" ? "black" : "white",
             }}
           >
             {title}

@@ -4,6 +4,9 @@ import Counter from "./components/Counter";
 import PracticeComponents from "./components/PracticeComponents";
 import Users from "./components/Users";
 import Sections from "./components/sections";
+import FlexLayout from "./components/FlexLayout";
+import Layout from "./components/Layout";
+import ComStates from "./components/ComStates";
 
 const App = () => {
   let welcome = "Welcome again!";
@@ -11,9 +14,12 @@ const App = () => {
   return (
     <View style={styles.container}>
       {/* <Counter /> */}
-      <PracticeComponents />
+      {/* <PracticeComponents /> */}
       {/* <Users //> */}
       {/* <Sections /> */}
+      {/* <FlexLayout /> */}
+      {/* <Layout /> */}
+      <ComStates />
       <StatusBar style="light" backgroundColor="green" />
     </View>
   );

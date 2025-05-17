@@ -6,6 +6,7 @@ import {
   View,
 } from "react-native";
 import React from "react";
+import { Link } from "expo-router";
 
 const data = [
   {
@@ -75,19 +76,25 @@ const Users = () => {
 };
 
 const User = ({ user }) => (
-  <View
-    style={{
-      borderWidth: 1,
-      backgroundColor: "#d6d6",
-      padding: 20,
-      marginBottom: 20,
-    }}
+  <Link
+    href={{ pathname: `/users/${user.id}`, params: user }}
+    style={{ width: "100%" }}
   >
-    <Text style={{ fontSize: 18, fontWeight: "semibold", marginBottom: 8 }}>
-      {user?.name}
-    </Text>
-    <Text>{user?.address}</Text>
-  </View>
+    <View
+      style={{
+        borderWidth: 1,
+        backgroundColor: "#d6d6",
+        padding: 20,
+        marginBottom: 20,
+        width: "100%",
+      }}
+    >
+      <Text style={{ fontSize: 18, fontWeight: "semibold", marginBottom: 8 }}>
+        {user?.name}
+      </Text>
+      <Text>{user?.address}</Text>
+    </View>
+  </Link>
 );
 
 export default Users;
