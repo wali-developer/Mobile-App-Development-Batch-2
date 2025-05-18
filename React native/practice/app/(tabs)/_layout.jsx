@@ -40,12 +40,22 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="user" size={22} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="layoutExample"
         options={{
-          title: "Layout",
-          tabBarIcon: ({ color }) => (
-            <Feather name="layout" size={20} color={color} />
-          ),
+          // title: "Layout",
+          // tabBarIcon: ({ color }) => (
+          //   <Feather name="layout" size={20} color={color} />
+          // ),
+          href: null,
         }}
       />
       <Tabs.Screen

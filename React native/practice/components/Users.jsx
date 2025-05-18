@@ -1,85 +1,62 @@
 import {
+  ActivityIndicator,
+  Button,
   FlatList,
   StyleSheet,
   Text,
   useWindowDimensions,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "expo-router";
-
-const data = [
-  {
-    id: 1,
-    name: "John Doe",
-    address: "New york",
-  },
-  {
-    id: 2,
-    name: "Smith",
-    address: "London",
-  },
-  {
-    id: 3,
-    name: "Ralph",
-    address: "South America",
-  },
-  {
-    id: 4,
-    name: "John Doe",
-    address: "New york",
-  },
-  {
-    id: 5,
-    name: "Smith",
-    address: "London",
-  },
-  {
-    id: 6,
-    name: "Ralph",
-    address: "South America",
-  },
-  {
-    id: 7,
-    name: "John Doe",
-    address: "New york",
-  },
-  {
-    id: 8,
-    name: "Smith",
-    address: "London",
-  },
-  {
-    id: 9,
-    name: "Ralph",
-    address: "South America",
-  },
-];
+import axios from "axios";
 
 const Users = () => {
   const { width, height } = useWindowDimensions();
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        setData(response.data);
+      } catch (error) {
+        console.log("Error fetching users data: ", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getUsers();
+  }, []);
+
   return (
     <View style={{ flex: 1, paddingHorizontal: 20 }}>
       <Text style={{ fontSize: 30, fontWeight: "bold" }}>Users</Text>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => <User user={item} />}
-        keyExtractor={(user) => user.id}
-        contentContainerStyle={{
-          marginTop: 20,
-          flex: 1,
-          width,
-        }}
-      />
+      {!isLoading ? (
+        <FlatList
+          data={data}
+          renderItem={({ item }) => <User user={item} />}
+          keyExtractor={(user) => user.id}
+          contentContainerStyle={{
+            marginTop: 20,
+            flex: 1,
+            width,
+          }}
+        />
+      ) : (
+        <ActivityIndicator size={"large"} color={"blue"} />
+      )}
     </View>
   );
 };
 
 const User = ({ user }) => (
-  <Link
-    href={{ pathname: `/users/${user.id}`, params: user }}
-    style={{ width: "100%" }}
-  >
+  <Link href={`/users/${user.id}`} style={{ width: "100%" }}>
     <View
       style={{
         borderWidth: 1,
@@ -92,7 +69,7 @@ const User = ({ user }) => (
       <Text style={{ fontSize: 18, fontWeight: "semibold", marginBottom: 8 }}>
         {user?.name}
       </Text>
-      <Text>{user?.address}</Text>
+      <Text>{`${user?.address?.city}, ${user?.address?.street}, ${user?.address?.zipcode}`}</Text>
     </View>
   </Link>
 );
