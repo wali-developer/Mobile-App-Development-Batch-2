@@ -7,8 +7,8 @@ export const storeData = async (key, value) => {
       key,
       stringValue,
       (error, result) => {
-        console.log(result);
-        console.log(error);
+        console.log({ result });
+        console.log({ error });
       }
     );
     console.log(result);

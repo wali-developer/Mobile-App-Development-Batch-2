@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   input: {
     height: 44,
     backgroundColor: colors.placeholderBackground,
-    padding: 17,
+    paddingHorizontal: 17,
     borderRadius: 5,
     marginTop: 8,
     fontSize: 14,

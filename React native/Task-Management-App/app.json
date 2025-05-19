@@ -21,7 +21,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.waliullah.tasksmanagement"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -36,6 +40,12 @@
       ],
       "expo-router",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0144b98f-2e00-42af-b8ca-6b9c3c656844"
+      }
+    }
   }
 }

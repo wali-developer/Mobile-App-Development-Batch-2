@@ -28,7 +28,7 @@ const RootLayout = () => {
 
   return (
     <>
-      <StatusBar style="light" backgroundColor="green" />
+      <StatusBar style="dark" backgroundColor="white" />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -36,16 +36,8 @@ const RootLayout = () => {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="signup" />
-        {/* <Stack.Screen name="contact" />
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            contentStyle: {
-              paddingBottom: 15,
-              backgroundColor: "white",
-            },
-          }}
-        /> */}
+        <Stack.Screen name="tasks" />
+        <Stack.Screen name="askTask" />
       </Stack>
     </>
   );

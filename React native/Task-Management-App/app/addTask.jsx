@@ -6,62 +6,67 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
 import { fonts } from "../base/constants";
 import TextField from "../components/common/TextField";
-import PasswordField from "../components/common/PasswordField";
 import { colors } from "../base/colors";
-import Checkbox from "../components/common/Checkbox";
-import { Link, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { axiosInstanace } from "../base/utils/axios";
 
-const SignUpPage = () => {
+const AddTaskPage = () => {
+  const task = useLocalSearchParams();
   const router = useRouter();
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [userData, setUserData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const [taskData, setTaskData] = useState({
+    title: "",
+    type: "",
+    periority: "",
   });
 
+  useEffect(() => {
+    setTaskData({
+      title: task?.title ?? "",
+      type: task?.type ?? "",
+      periority: task?.periority ?? "",
+    });
+  }, []);
+
   const handleChange = (field, value) => {
-    setUserData((prev) => ({ ...prev, [field]: value }));
+    setTaskData((prev) => ({ ...prev, [field]: value }));
     setError(null);
   };
 
   const handleSubmit = async () => {
-    if (!userData.fullName || !userData.email || !userData.password) {
-      setError("All fields must be provided to create account!");
-      return;
-    }
-
-    if (userData.password !== userData.confirmPassword) {
-      setError("Password mismatched!");
+    if (!taskData.title || !taskData.type || !taskData.periority) {
+      setError("All fields must be provided to add a task!");
       return;
     }
 
     setError(null);
     try {
       setIsLoading(true);
-      const { data } = await axiosInstanace.post("/api/auth/sign-up", userData);
-
-      if (data?.Success) {
-        alert(
-          "Your account has successfull created, now you can login to app."
+      if (task) {
+        const { data } = await axiosInstanace.put(
+          `/api/todo/update/${task?._id}`,
+          taskData
         );
-        setUserData({
-          fullName: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
-        router.push("/");
+        alert("Task has been Updated in your tasks list!");
+      } else {
+        const { data } = await axiosInstanace.post("/api/todo/add", taskData);
+        alert("Task has been added to your tasks list!");
       }
+
+      setTaskData({
+        title: "",
+        type: "",
+        periority: "",
+      });
+
+      router.push("/tasks");
     } catch (error) {
-      console.log("Signup Error: ", error);
+      console.log("Add task Error: ", error);
       if (error?.response?.data?.error) {
         setError(error?.response?.data?.error);
       } else if (error?.message) {
@@ -75,43 +80,33 @@ const SignUpPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons name="arrow-back-outline" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.heading}>Sign Up</Text>
+        <Link href={"tasks"}>
+          <TouchableOpacity style={styles.backButton}>
+            <Ionicons name="arrow-back-outline" size={24} color="black" />
+          </TouchableOpacity>
+        </Link>
+        <Text style={styles.heading}>{task ? "Update" : "Add"} task</Text>
       </View>
       <View style={{ gap: 20 }}>
         {error && <Text style={styles.errorText}>{error}</Text>}
         <TextField
-          label={"Full name"}
-          placeholder={"Enter your full name"}
-          value={userData.fullName}
-          onChangeText={(value) => handleChange("fullName", value)}
+          label={"Title"}
+          placeholder={"Enter your task title"}
+          value={taskData.title}
+          onChangeText={(value) => handleChange("title", value)}
         />
         <TextField
-          label={"E-mail"}
-          placeholder={"Enter your email"}
-          value={userData.email}
-          onChangeText={(value) => handleChange("email", value)}
+          label={"Type / Category"}
+          placeholder={"Task type type e.g (Design, Development)"}
+          value={taskData.type}
+          onChangeText={(value) => handleChange("type", value)}
         />
-        <PasswordField
-          label={"Password"}
-          placeholder={"Enter your password"}
-          value={userData.password}
-          onChangeText={(value) => handleChange("password", value)}
+        <TextField
+          label={"Periority"}
+          placeholder={"Task periority e.g (high, low, medium)"}
+          value={taskData.periority}
+          onChangeText={(value) => handleChange("periority", value)}
         />
-        <PasswordField
-          label={"Re-type Password"}
-          placeholder={"Enter your password again"}
-          value={userData.confirmPassword}
-          onChangeText={(value) => handleChange("confirmPassword", value)}
-        />
-        <View style={styles.textsWrapper}>
-          <Checkbox label="I Agree terms and Conditions" />
-        </View>
       </View>
       <View>
         <TouchableOpacity
@@ -122,14 +117,14 @@ const SignUpPage = () => {
           {isLoading ? (
             <ActivityIndicator size={"small"} color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>Sign Up Now</Text>
+            <Text style={styles.buttonText}>{task ? "Update" : "Add"}</Text>
           )}
         </TouchableOpacity>
         <Text style={styles.noAccountText}>
-          Already Have an account?{" "}
-          <Link href={"/"}>
+          Go back to{" "}
+          <Link href={"/tasks"}>
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
-              SignIn
+              Tasks
             </Text>
           </Link>
         </Text>
@@ -138,7 +133,7 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default AddTaskPage;
 
 const styles = StyleSheet.create({
   container: {
